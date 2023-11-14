@@ -42,15 +42,18 @@ export const useCounterStore = defineStore('counter', () => {
   const Tags: Array<TagInterface> = [
     {
       idTag: 1,
-      tagName: 'mineur'
+      tagName: 'mineur',
+      tagColor: '#fb5607'
     },
     {
       idTag: 2,
-      tagName: 'moyen'
+      tagName: 'moyen',
+      tagColor: '#ff006e'
     },
     {
       idTag: 3,
-      tagName: 'moyen'
+      tagName: 'haut',
+      tagColor: '#8338ec'
     }
   ]
   const Tasks: Array<TaskInterface> = [

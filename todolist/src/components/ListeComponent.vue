@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ticketTagComponent from './ticketTagComponent.vue'
 const props = defineProps<{
   todoMListName: string
   ListTasks: any[]
@@ -18,14 +19,12 @@ console.log(props.ListTasks[0])
           <li v-for="task in column.tasks" :key="task.idTask">
             <h5>{{ task?.taskName }}</h5>
             <div class="customState">
-              <p>{{ task?.tag.tagName }}</p>
-              <p>DONE</p>
+              <ticketTagComponent :tag="task?.tag"></ticketTagComponent>
             </div>
           </li>
           <li class="buttonAddTask">
             <img
-              alt="Vue logo"
-              class="logo"
+              alt="Ajouter un tâche"
               src="@/assets/iconSVG/add-outline.svg"
               width="20"
               height="20"
