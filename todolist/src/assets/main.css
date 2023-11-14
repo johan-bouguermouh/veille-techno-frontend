@@ -21,6 +21,19 @@ a,
   transition: 0.4s;
 }
 
+imput {
+  border: 1px solid #00000033;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: red;
+  transition:
+    border-color 0.5s,
+    background-color 0.5s;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
