@@ -1,12 +1,26 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import ticketTagComponent from './ticketTagComponent.vue'
+import FormTaskModaleComponent from './FormTaskModaleComponent.vue'
+import type { TaskInterface } from '@/stores/counter'
 const props = defineProps<{
   todoMListName: string
   ListTasks: any[]
   columns: any[]
 }>()
 /** On verifie si les props sont bien passées une fois ressue par le store */
-console.log(props.ListTasks[0])
+console.log(props.columns)
+/** @define open dialogue compoent to add or edit task */
+const isModalOpen = ref(false)
+const selectedTask = ref(undefined)
+const idStateSelected = ref(1)
+
+const openModal = (task: any) => {
+  console.log(task.idTask)
+  isModalOpen.value = true
+  selectedTask.value = task
+  idStateSelected.value = task.state.idState
+}
 </script>
 
 <template>
@@ -17,7 +31,7 @@ console.log(props.ListTasks[0])
         <h3>{{ column?.columnName }}</h3>
         <ul class="ulListTasks">
           <li v-for="task in column.tasks" :key="task.idTask">
-            <h5>{{ task?.taskName }}</h5>
+            <h5 @click="openModal(task)">{{ task?.taskName }}</h5>
             <div class="customState">
               <ticketTagComponent :tag="task?.tag"></ticketTagComponent>
             </div>
@@ -34,6 +48,11 @@ console.log(props.ListTasks[0])
       </div>
     </div>
   </div>
+  <FormTaskModaleComponent
+    :isOpen="isModalOpen"
+    :idState="idStateSelected"
+    :selectedTask="selectedTask"
+  />
 </template>
 
 <style scoped>

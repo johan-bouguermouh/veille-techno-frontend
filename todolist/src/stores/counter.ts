@@ -229,6 +229,40 @@ export const useCounterStore = defineStore('counter', () => {
     }
   }
 
+  /**
+   * @define Trouver un state par son nom
+   * @param {string} stateName
+   * @returns {StateInteface}
+   * @memberof useCounterStore
+   * @example
+   * findStateByName('A faire')
+   * // return States[0]
+   */
+  function findStateByName(stateName: string): StateInteface {
+    if (stateName) {
+      const stateFinded = States.find((state) => state.stateName === stateName)
+      if (stateFinded) {
+        return stateFinded
+      } else {
+        return States[0]
+      }
+    } else {
+      return States[0]
+    }
+  }
+
+  /**
+   * @description Compte le nombre de tâches
+   * @returns {number}
+   * @memberof useCounterStore
+   * @example
+   * countTasks()
+   * // return 3
+   */
+  function countTasks(): number {
+    return Tasks.length
+  }
+
   return {
     count,
     doubleCount,
@@ -239,6 +273,9 @@ export const useCounterStore = defineStore('counter', () => {
     addTask,
     deleteTask,
     updateTaskTag,
-    updateTaskOrder
+    updateTaskOrder,
+    countTasks,
+    findStateById,
+    findStateByName
   }
 })
