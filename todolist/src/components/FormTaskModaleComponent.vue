@@ -12,8 +12,16 @@ const props = defineProps<{
   handleIsOpen: (value: boolean) => void
 }>()
 
-const { countTasks, findStateById, getTags, getStates, isIdTaskValid, updateTask, findTagById } =
-  useCounterStore()
+const {
+  addTask,
+  countTasks,
+  findStateById,
+  getTags,
+  getStates,
+  isIdTaskValid,
+  updateTask,
+  findTagById
+} = useCounterStore()
 
 //console.log(props.selectedTask)
 const thisTask = ref<TaskInterface>({
@@ -64,7 +72,9 @@ const updateSelect = ($event: any) => {
       thisTask.value.state = findStateById($event.target.value)
       break
     case 'tag':
-      thisTask.value.tag = findTagById($event.target.value)
+      if ($event.target.value !== '0') {
+        thisTask.value.tag = findTagById($event.target.value)
+      }
       break
     default:
       break
@@ -77,7 +87,7 @@ const updateSelect = ($event: any) => {
     <div class="main-modal-form-task">
       <h1>{{ title }}</h1>
       <hr />
-      <form class="form-task" action="">
+      <form class="form-task">
         <div>
           <fieldset>
             <legend>Titre du ticket</legend>
@@ -121,7 +131,7 @@ const updateSelect = ($event: any) => {
           <button v-if="isIdTaskValid(thisTask.idTask)" @click="updateTask(thisTask)" type="button">
             Modifier
           </button>
-          <button v-else type="submit">Ajouter</button>
+          <button v-else type="button" @click="($event) => addTask(thisTask)">Ajouter</button>
         </div>
       </form>
     </div>

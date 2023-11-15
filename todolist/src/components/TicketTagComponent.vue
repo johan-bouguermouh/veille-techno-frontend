@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { TagInterface } from '@/stores/counter'
 import { defineProps } from 'vue'
-import { reactive, ref, computed, watch, onMounted, onBeforeUpdate } from 'vue'
+import { ref, onMounted, onBeforeUpdate } from 'vue'
 
 const ticketTagRef = ref(null)
 const props = defineProps<{
-  tag: TagInterface
+  tag: TagInterface | undefined
 }>()
 
 onMounted(() => {
@@ -18,15 +18,17 @@ onMounted(() => {
 })
 
 onBeforeUpdate(() => {
-  ticketTagRef.value.style.backgroundColor = props.tag.tagColor
-    ? props.tag.tagColor + 33
-    : 'transparent'
-  ticketTagRef.value.style.color = props.tag.tagColor ? props.tag.tagColor : '#000000DE'
+  if (ticketTagRef.value) {
+    ticketTagRef.value.style.backgroundColor = props.tag.tagColor
+      ? props.tag.tagColor + 33
+      : 'transparent'
+    ticketTagRef.value.style.color = props.tag.tagColor ? props.tag.tagColor : '#000000DE'
+  }
 })
 </script>
 
 <template>
-  <div class="ticketTag" ref="ticketTagRef">
+  <div v-if="tag" class="ticketTag" ref="ticketTagRef">
     <span>{{ tag.tagName }}</span>
   </div>
 </template>

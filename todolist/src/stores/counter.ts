@@ -18,14 +18,12 @@ export interface TaskInterface {
   description: string
   taskIsDone: boolean
   state: StateInteface
-  tag?: TagInterface
+  tag?: TagInterface | undefined
   order: number
 }
 
 export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  const States: Array<StateInteface> = [
+  const States = ref<Array<StateInteface>>([
     {
       idState: 1,
       stateName: 'A faire'
@@ -38,8 +36,8 @@ export const useCounterStore = defineStore('counter', () => {
       idState: 3,
       stateName: 'Terminé'
     }
-  ]
-  const Tags: Array<TagInterface> = [
+  ])
+  const Tags = ref<Array<TagInterface>>([
     {
       idTag: 1,
       tagName: 'mineur',
@@ -55,47 +53,47 @@ export const useCounterStore = defineStore('counter', () => {
       tagName: 'haut',
       tagColor: '#8338ec'
     }
-  ]
-  const Tasks: Array<TaskInterface> = [
+  ])
+  const Tasks = ref<Array<TaskInterface>>([
     {
       taskName: "Tâche d'exemple en court",
       idTask: 1,
       description: 'Ceci est une description',
       taskIsDone: false,
-      tag: Tags[0],
+      tag: Tags.value[0],
       order: 1,
-      state: States[1]
+      state: States.value[1]
     },
     {
       taskName: 'Tâche terminée',
       idTask: 2,
       description: 'Ceci est une description',
       taskIsDone: true,
-      tag: Tags[1],
+      tag: Tags.value[1],
       order: 2,
-      state: States[2]
+      state: States.value[2]
     },
     {
       taskName: 'Tâche custom',
       idTask: 3,
       description: 'Ceci est une description',
       taskIsDone: false,
-      tag: Tags[2],
+      tag: Tags.value[2],
       order: 3,
-      state: States[0]
+      state: States.value[0]
     }
-  ]
+  ])
 
   function getTasksSortedByColumn() {
     // for each colomn get tasks sorted by order
     const tasksSortedByColumn: any = []
-    States.forEach((state, index) => {
+    States.value.forEach((state, index) => {
       tasksSortedByColumn.push({
         columnName: state.stateName,
         columnId: index + 1,
-        tasks: Tasks.filter((task) => task.state.idState === state.idState).sort(
-          (a, b) => a.order - b.order
-        )
+        tasks: Tasks.value
+          .filter((task) => task.state.idState === state.idState)
+          .sort((a, b) => a.order - b.order)
       })
     })
     return tasksSortedByColumn
@@ -111,7 +109,7 @@ export const useCounterStore = defineStore('counter', () => {
    */
   function getTasks(): Array<TaskInterface> {
     // return Tasks
-    return Tasks.sort((a, b) => a.order - b.order)
+    return Tasks.value.sort((a, b) => a.order - b.order)
   }
 
   /**
@@ -123,7 +121,7 @@ export const useCounterStore = defineStore('counter', () => {
    * getTask(1)
    */
   function getTask(idTask: number): any {
-    const thisTask: any = Tasks.find((task) => task.idTask === idTask)
+    const thisTask: any = Tasks.value.find((task) => task.idTask === idTask)
     return thisTask
   }
 
@@ -136,15 +134,12 @@ export const useCounterStore = defineStore('counter', () => {
    * getTasksByTag(1)
    */
   function getTasksByTag(idTag: number): Array<TaskInterface> {
-    return Tasks.filter((task) => task.tag?.idTag === idTag)
+    return Tasks.value.filter((task) => task.tag?.idTag === idTag)
   }
 
   /**
    * @description Ajoute une task au tableau
-   * @param {string} taskName
-   * @param {string} description
-   * @param {boolean} taskIsDone
-   * @param {number} idTag
+   * @param {TaskInterface} task
    * @memberof useCounterStore
    * @example
    * addTask({
@@ -153,24 +148,19 @@ export const useCounterStore = defineStore('counter', () => {
    * taskIsDone: false,
    * tag: Tags[2],
    */
-  function addTask(
-    taskName: string,
-    description: string,
-    taskIsDone?: boolean,
-    idTag?: number,
-    idState?: number
-  ): void {
-    const task: TaskInterface = {
-      taskName,
-      description,
-      taskIsDone: taskIsDone || false,
-      tag: idTag ? Tags.find((tag) => tag.idTag === idTag) : undefined,
-      idTask: Tasks.length + 1,
-      order: Tasks.length + 1,
-      state: idState ? findStateById(idState) : States[0]
-    }
+  function addTask(task: TaskInterface): void {
+    console.log('task on store =>', task)
+    // const task: TaskInterface = {
+    //   taskName,
+    //   description,
+    //   taskIsDone: taskIsDone || false,
+    //   tag: idTag ? Tags.find((tag) => tag.idTag === idTag) : undefined,
+    //   idTask: Tasks.length + 1,
+    //   order: Tasks.length + 1,
+    //   state: idState ? findStateById(idState) : States[0]
+    // }
 
-    Tasks.push(task)
+    Tasks.value.push(task)
   }
 
   /**
@@ -191,8 +181,8 @@ export const useCounterStore = defineStore('counter', () => {
    */
   function updateTask(task: TaskInterface): void {
     console.log('task on store =>', task)
-    const index = Tasks.findIndex((task) => task.idTask === task.idTask)
-    Tasks[index] = task
+    const index = Tasks.value.findIndex((task) => task.idTask === task.idTask)
+    Tasks.value[index] = task
 
     console.log(Tasks)
   }
@@ -205,8 +195,8 @@ export const useCounterStore = defineStore('counter', () => {
    * deleteTask(1)
    */
   function deleteTask(idTask: number): void {
-    const index = Tasks.findIndex((task) => task.idTask === idTask)
-    Tasks.splice(index, 1)
+    const index = Tasks.value.findIndex((task) => task.idTask === idTask)
+    Tasks.value.splice(index, 1)
   }
 
   /**
@@ -218,8 +208,8 @@ export const useCounterStore = defineStore('counter', () => {
    * updateTaskTag(1, 2)
    */
   function updateTaskTag(idTask: number, idTag: number): void {
-    const index = Tasks.findIndex((task) => task.idTask === idTask)
-    Tasks[index].tag = Tags.find((tag) => tag.idTag === idTag)
+    const index = Tasks.value.findIndex((task) => task.idTask === idTask)
+    Tasks.value[index].tag = Tags.value.find((tag) => tag.idTag === idTag)
   }
 
   /**
@@ -231,8 +221,8 @@ export const useCounterStore = defineStore('counter', () => {
    * updateTaskOrder(1, 2)
    */
   function updateTaskOrder(idTask: number, order: number): void {
-    const index = Tasks.findIndex((task) => task.idTask === idTask)
-    Tasks[index].order = order
+    const index = Tasks.value.findIndex((task) => task.idTask === idTask)
+    Tasks.value[index].order = order
   }
 
   /**
@@ -245,14 +235,14 @@ export const useCounterStore = defineStore('counter', () => {
       if (typeof idState === 'string') {
         idState = parseInt(idState)
       }
-      const stateFinded = States.find((state) => state.idState === idState)
+      const stateFinded = States.value.find((state) => state.idState === idState)
       if (stateFinded) {
         return stateFinded
       } else {
-        return States[2]
+        return States.value[2]
       }
     } else {
-      return States[2]
+      return States.value[2]
     }
   }
 
@@ -267,14 +257,14 @@ export const useCounterStore = defineStore('counter', () => {
    */
   function findStateByName(stateName: string): StateInteface {
     if (stateName) {
-      const stateFinded = States.find((state) => state.stateName === stateName)
+      const stateFinded = States.value.find((state) => state.stateName === stateName)
       if (stateFinded) {
         return stateFinded
       } else {
-        return States[0]
+        return States.value[0]
       }
     } else {
-      return States[0]
+      return States.value[0]
     }
   }
 
@@ -287,7 +277,7 @@ export const useCounterStore = defineStore('counter', () => {
    * // return 3
    */
   function countTasks(): number {
-    return Tasks.length
+    return Tasks.value.length
   }
 
   /**
@@ -299,7 +289,7 @@ export const useCounterStore = defineStore('counter', () => {
    * // return Tags
    */
   function getTags(): Array<TagInterface> {
-    return Tags
+    return Tags.value
   }
 
   /**
@@ -316,12 +306,12 @@ export const useCounterStore = defineStore('counter', () => {
     if (typeof idTag === 'string') {
       idTag = parseInt(idTag)
     }
-    const tagsFinded = Tags.find((tag) => tag.idTag == idTag)
+    const tagsFinded = Tags.value.find((tag) => tag.idTag == idTag)
     console.log('tagsFinded =>', tagsFinded)
     if (tagsFinded) {
       return tagsFinded
     } else {
-      return Tags[0]
+      return Tags.value[0]
     }
   }
 
@@ -334,7 +324,7 @@ export const useCounterStore = defineStore('counter', () => {
    * // return States
    */
   function getStates(): Array<StateInteface> {
-    return States
+    return States.value
   }
 
   /**
@@ -347,13 +337,11 @@ export const useCounterStore = defineStore('counter', () => {
    * // return true
    */
   function isIdTaskValid(idTask: number): boolean {
-    return Tasks.some((task) => task.idTask === idTask)
+    return Tasks.value.some((task) => task.idTask === idTask)
   }
 
   return {
     Tasks,
-    count,
-    doubleCount,
     getTasksSortedByColumn,
     getTasks,
     getTask,
