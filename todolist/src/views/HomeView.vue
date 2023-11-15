@@ -3,21 +3,28 @@
 import ListeComponent from '@/components/ListeComponent.vue'
 /** @define store de tasks de la todoliste */
 import { useCounterStore } from '@/stores/counter'
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 
-const { getTasks, getTasksSortedByColumn } = useCounterStore()
+const { getTasksSortedByColumn, Tasks } = useCounterStore()
 //console.log(getTasksSortedByColumn())
-const taskList = ref(getTasks())
-const columns = ref(getTasksSortedByColumn())
+const columns = ref([])
+
+//console/log task on changement de task
+onMounted(() => {
+  //console.log('Mounted IN HOME VIEW')
+  columns.value = getTasksSortedByColumn()
+})
+
+// si Task change on force le refrech de la vue
+watch(Tasks, () => {
+  console.log('watch IN HOME VIEW =>', Tasks)
+  columns.value = getTasksSortedByColumn()
+})
 </script>
 
 <template>
   <main>
-    <ListeComponent
-      todoMListName="Ma todo liste"
-      :ListTasks="taskList"
-      :columns="columns"
-    ></ListeComponent>
+    <ListeComponent todoMListName="Ma todo liste" :columns="columns"></ListeComponent>
   </main>
 </template>
 

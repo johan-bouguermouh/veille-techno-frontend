@@ -2,10 +2,9 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 import { useCounterStore, type TaskInterface } from '@/stores/counter'
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { computed } from 'vue'
 
-let isFirstUpdate = true
 const props = defineProps<{
   isOpen: boolean
   idState: number
@@ -13,7 +12,8 @@ const props = defineProps<{
   handleIsOpen: (value: boolean) => void
 }>()
 
-const { addTask, countTasks, findStateById, getTags, getStates } = useCounterStore()
+const { countTasks, findStateById, getTags, getStates, isIdTaskValid, updateTask, findTagById } =
+  useCounterStore()
 
 //console.log(props.selectedTask)
 const thisTask = ref<TaskInterface>({
@@ -33,7 +33,6 @@ const thisTask = ref<TaskInterface>({
   }
 })
 
-console.log(thisTask.value)
 const tags = ref(getTags())
 const states = ref(getStates())
 const title = computed(() => {
@@ -42,7 +41,6 @@ const title = computed(() => {
 
 const closeModale = ($event: any) => {
   if ($event.composedPath()[0].className === 'wrappe-modal-form-task') {
-    isFirstUpdate = true
     props.handleIsOpen(false)
   }
 }
@@ -60,15 +58,23 @@ onMounted(() => {
       }
 })
 
-watch(props, (e) => {
-  const { isOpen, idState, selectedTask, handleIsOpen } = e
-  console.log(e)
-})
+const updateSelect = ($event: any) => {
+  switch ($event.target.name) {
+    case 'state':
+      thisTask.value.state = findStateById($event.target.value)
+      break
+    case 'tag':
+      thisTask.value.tag = findTagById($event.target.value)
+      break
+    default:
+      break
+  }
+}
 </script>
 // @submit.prevent="addTask(thisTask)"
 <template>
   <div v-if="isOpen" class="wrappe-modal-form-task" @click="closeModale($event)">
-    <div>
+    <div class="main-modal-form-task">
       <h1>{{ title }}</h1>
       <hr />
       <form class="form-task" action="">
@@ -83,7 +89,7 @@ watch(props, (e) => {
           </fieldset>
           <fieldset>
             <legend>Choisir un tag</legend>
-            <select name="tag">
+            <select name="tag" @input="($event) => updateSelect($event)">
               <option value="0">Choisir un tag</option>
               <option
                 v-for="tag in tags"
@@ -97,7 +103,7 @@ watch(props, (e) => {
           </fieldset>
           <fieldset>
             <legend>Changer l'état</legend>
-            <select name="state">
+            <select name="state" @input="($event) => updateSelect($event)">
               <option value="0">Choisir un état</option>
               <option
                 v-for="state in states"
@@ -110,7 +116,13 @@ watch(props, (e) => {
             </select>
           </fieldset>
         </div>
-        <button type="submit">Valider</button>
+        <div class="footer-modal-form-task">
+          <button type="button" @click="handleIsOpen(false)">Annuler</button>
+          <button v-if="isIdTaskValid(thisTask.idTask)" @click="updateTask(thisTask)" type="button">
+            Modifier
+          </button>
+          <button v-else type="submit">Ajouter</button>
+        </div>
       </form>
     </div>
   </div>
@@ -146,11 +158,12 @@ watch(props, (e) => {
 .form-task {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   box-sizing: border-box;
   height: 100%;
 }
 
-.form-task > div {
+.form-task > .main-modal-form-task {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -185,20 +198,37 @@ textarea {
   color: #000000ed;
 }
 
-button[type='submit'] {
+.footer-modal-form-task {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+button {
   justify-self: flex-end;
   align-self: flex-end;
   padding: 4px 12px;
   border-radius: 4px;
   font-size: 15px;
   border: none;
-  background-color: #640bad;
-  color: #ffffff;
   min-width: 90px;
   min-height: 44px;
 }
-button[type='submit']:hover {
-  background-color: #640badcc;
+button[type='submit'] {
+  background-color: #640bad;
+  color: #ffffff;
+}
+button:not([type='submit']) {
+  background-color: #a3a3a3;
+  color: #000000ed;
+  border: 1px solid #00000033;
+  margin-right: 12px;
+}
+
+button:hover {
+  filter: brightness(1.1);
   cursor: pointer;
   box-shadow: 0px 3px 10px 0px #00000033;
 }

@@ -1,25 +1,42 @@
 <script setup lang="ts">
 import type { TagInterface } from '@/stores/counter'
 import { defineProps } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 const props = defineProps<{
   tag: TagInterface
 }>()
 //créate custom style for tag if tag.tagColor is define
-const tagColorBackground = props.tag.tagColor ? props.tag.tagColor + 33 : 'transparent'
-const tagColorBorder = props.tag.tagColor ? props.tag.tagColor : '#00000033'
-const tagColorText = props.tag.tagColor ? props.tag.tagColor : '#000000DE'
+const tagColorBackground = ref('transparent')
+const tagColorBorder = ref('#00000033')
+const tagColorText = ref('#000000DE')
 
+onMounted(() => {
+  tagColorBackground.value = props.tag.tagColor ? props.tag.tagColor + 33 : 'transparent'
+  tagColorBorder.value = props.tag.tagColor ? props.tag.tagColor : '#00000033'
+  tagColorText.value = props.tag.tagColor ? props.tag.tagColor : '#000000DE'
+})
 //console.log(props.tag)
 //creat style for tag
 const tagStyle = {
-  backgroundColor: tagColorBackground,
-  border: '2px solid ' + tagColorBorder,
-  color: tagColorText
+  backgroundColor: tagColorBackground.value,
+  border: '2px solid ' + tagColorBorder.value,
+  color: tagColorText.value
 }
+
+watch(props.tag, () => {
+  console.log('Updated IN TAG COMPONENT')
+})
 </script>
 
 <template>
-  <div class="ticketTag">
+  <div
+    class="ticketTag"
+    :style="{
+      backgroundColor: tagStyle.backgroundColor,
+      border: tagStyle.border,
+      color: tagStyle.color
+    }"
+  >
     <span>{{ tag.tagName }}</span>
   </div>
 </template>

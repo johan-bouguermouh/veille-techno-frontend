@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import ticketTagComponent from './ticketTagComponent.vue'
 import FormTaskModaleComponent from './FormTaskModaleComponent.vue'
 import type { TaskInterface } from '@/stores/counter'
-defineProps<{
+const props = defineProps<{
   todoMListName: string
-  ListTasks: any[]
   columns: any[]
 }>()
 /** On verifie si les props sont bien passées une fois ressue par le store */
@@ -19,17 +18,21 @@ const idStateSelected = ref(1)
  * @param task
  * @returns void
  */
-const openModal = (task: any) => {
+const openModal = (idColumn: number, task?: any) => {
   //console.log(task.idTask)
   isModalOpen.value = true
-  selectedTask.value = task
-  idStateSelected.value = task.state.idState
+  selectedTask.value = task ? task : undefined
+  idStateSelected.value = idColumn
 }
 
 /** @define handler pour set la modal à false */
 const handleIsOpen = (value: boolean) => {
   isModalOpen.value = value
 }
+
+watch(props.columns, () => {
+  console.log('Updated IN LISTE COMPONENT')
+})
 </script>
 
 <template>
@@ -40,12 +43,12 @@ const handleIsOpen = (value: boolean) => {
         <h3>{{ column?.columnName }}</h3>
         <ul class="ulListTasks">
           <li v-for="task in column.tasks" :key="task.idTask">
-            <h5 @click="openModal(task)">{{ task?.taskName }}</h5>
+            <h5 @click="openModal(column.columnId, task)">{{ task?.taskName }}</h5>
             <div class="customState">
               <ticketTagComponent :tag="task?.tag"></ticketTagComponent>
             </div>
           </li>
-          <li class="buttonAddTask">
+          <li class="buttonAddTask" @click="($event) => openModal(column.columnId)">
             <img
               alt="Ajouter un tâche"
               src="@/assets/iconSVG/add-outline.svg"
