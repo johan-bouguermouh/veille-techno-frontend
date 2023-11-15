@@ -6,7 +6,7 @@ import { useCounterStore } from '@/stores/counter'
 import { ref } from 'vue'
 
 const { getTasks, getTasksSortedByColumn } = useCounterStore()
-console.log(getTasksSortedByColumn())
+//console.log(getTasksSortedByColumn())
 const taskList = ref(getTasks())
 const columns = ref(getTasksSortedByColumn())
 </script>

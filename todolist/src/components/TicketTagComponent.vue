@@ -9,7 +9,7 @@ const tagColorBackground = props.tag.tagColor ? props.tag.tagColor + 33 : 'trans
 const tagColorBorder = props.tag.tagColor ? props.tag.tagColor : '#00000033'
 const tagColorText = props.tag.tagColor ? props.tag.tagColor : '#000000DE'
 
-console.log(props.tag)
+//console.log(props.tag)
 //creat style for tag
 const tagStyle = {
   backgroundColor: tagColorBackground,

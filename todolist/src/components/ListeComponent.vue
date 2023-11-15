@@ -3,23 +3,32 @@ import { ref } from 'vue'
 import ticketTagComponent from './ticketTagComponent.vue'
 import FormTaskModaleComponent from './FormTaskModaleComponent.vue'
 import type { TaskInterface } from '@/stores/counter'
-const props = defineProps<{
+defineProps<{
   todoMListName: string
   ListTasks: any[]
   columns: any[]
 }>()
 /** On verifie si les props sont bien passées une fois ressue par le store */
-console.log(props.columns)
+//console.log(props.columns)
 /** @define open dialogue compoent to add or edit task */
 const isModalOpen = ref(false)
-const selectedTask = ref(undefined)
+const selectedTask = ref({} as TaskInterface | undefined)
 const idStateSelected = ref(1)
 
+/** @define Met à jour les valeus d'hydratation de la modale forumlaire
+ * @param task
+ * @returns void
+ */
 const openModal = (task: any) => {
-  console.log(task.idTask)
+  //console.log(task.idTask)
   isModalOpen.value = true
   selectedTask.value = task
   idStateSelected.value = task.state.idState
+}
+
+/** @define handler pour set la modal à false */
+const handleIsOpen = (value: boolean) => {
+  isModalOpen.value = value
 }
 </script>
 
@@ -49,6 +58,8 @@ const openModal = (task: any) => {
     </div>
   </div>
   <FormTaskModaleComponent
+    v-if="isModalOpen"
+    :handleIsOpen="handleIsOpen"
     :isOpen="isModalOpen"
     :idState="idStateSelected"
     :selectedTask="selectedTask"

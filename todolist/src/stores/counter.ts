@@ -263,6 +263,30 @@ export const useCounterStore = defineStore('counter', () => {
     return Tasks.length
   }
 
+  /**
+   * @define Récupérer tout les tags existants
+   * @returns {Array<TagInterface>}
+   * @memberof useCounterStore
+   * @example
+   * getTags()
+   * // return Tags
+   */
+  function getTags(): Array<TagInterface> {
+    return Tags
+  }
+
+  /**
+   * @define Récupérer tout les states existants
+   * @returns {Array<StateInteface>}
+   * @memberof useCounterStore
+   * @example
+   * getStates()
+   * // return States
+   */
+  function getStates(): Array<StateInteface> {
+    return States
+  }
+
   return {
     count,
     doubleCount,
@@ -276,6 +300,8 @@ export const useCounterStore = defineStore('counter', () => {
     updateTaskOrder,
     countTasks,
     findStateById,
-    findStateByName
+    findStateByName,
+    getTags,
+    getStates
   }
 })
