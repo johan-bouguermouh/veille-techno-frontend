@@ -7,19 +7,14 @@ const ticketTagRef = ref(null)
 const props = defineProps<{
   tag: TagInterface
 }>()
-//créate custom style for tag if tag.tagColor is define
-const tagColorBackground = ref('transparent')
-const tagColorText = ref('#000000DE')
 
 onMounted(() => {
-  tagColorBackground.value = props.tag.tagColor ? props.tag.tagColor + 33 : 'transparent'
-  tagColorText.value = props.tag.tagColor ? props.tag.tagColor : '#000000DE'
-})
-//console.log(props.tag)
-//creat style for tag
-const tagStyle = reactive({
-  backgroundColor: props.tag.tagColor ? props.tag.tagColor + 33 : 'transparent',
-  color: props.tag.tagColor ? props.tag.tagColor : '#000000DE'
+  if (ticketTagRef.value) {
+    ticketTagRef.value.style.backgroundColor = props.tag.tagColor
+      ? props.tag.tagColor + 33
+      : 'transparent'
+    ticketTagRef.value.style.color = props.tag.tagColor ? props.tag.tagColor : '#000000DE'
+  }
 })
 
 onBeforeUpdate(() => {
