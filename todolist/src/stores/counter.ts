@@ -174,6 +174,30 @@ export const useCounterStore = defineStore('counter', () => {
   }
 
   /**
+   * @define Modifie une task du tableau
+   * @param {TaskInterface} task
+   * @memberof useCounterStore
+   * @example
+   * updateTask({
+   * taskName: 'Tâche custom',
+   * description: 'Ceci est une description',
+   * taskIsDone: false,
+   * tag: Tags[2],
+   * idTask: 1,
+   * order: 1,
+   * state: States[0]
+   * })
+   * // return void
+   */
+  function updateTask(task: TaskInterface): void {
+    console.log('task on store =>', task)
+    const index = Tasks.findIndex((task) => task.idTask === task.idTask)
+    Tasks[index] = task
+
+    console.log(Tasks)
+  }
+
+  /**
    * @description Supprime une task du tableau
    * @param {number} idTask
    * @memberof useCounterStore
@@ -216,16 +240,19 @@ export const useCounterStore = defineStore('counter', () => {
    * @param {number} idState
    * @returns {StateInteface}
    */
-  function findStateById(idState: number): StateInteface {
+  function findStateById(idState: number | string): StateInteface {
     if (idState) {
+      if (typeof idState === 'string') {
+        idState = parseInt(idState)
+      }
       const stateFinded = States.find((state) => state.idState === idState)
       if (stateFinded) {
         return stateFinded
       } else {
-        return States[0]
+        return States[2]
       }
     } else {
-      return States[0]
+      return States[2]
     }
   }
 
@@ -276,6 +303,29 @@ export const useCounterStore = defineStore('counter', () => {
   }
 
   /**
+   * @define Récupère un tag par son id
+   * @param {number} idTag
+   * @returns {TagInterface}
+   * @memberof useCounterStore
+   * @example
+   * findTagById(1)
+   * // return Tags[0]
+   */
+  function findTagById(idTag: number | string): TagInterface {
+    //si c'est une string on la parse en number
+    if (typeof idTag === 'string') {
+      idTag = parseInt(idTag)
+    }
+    const tagsFinded = Tags.find((tag) => tag.idTag == idTag)
+    console.log('tagsFinded =>', tagsFinded)
+    if (tagsFinded) {
+      return tagsFinded
+    } else {
+      return Tags[0]
+    }
+  }
+
+  /**
    * @define Récupérer tout les states existants
    * @returns {Array<StateInteface>}
    * @memberof useCounterStore
@@ -287,7 +337,21 @@ export const useCounterStore = defineStore('counter', () => {
     return States
   }
 
+  /**
+   * @define Défini si une idTask est présente dans le tableau
+   * @param {number} idTask
+   * @returns {boolean}
+   * @memberof useCounterStore
+   * @example
+   * isIdTaskValid(1)
+   * // return true
+   */
+  function isIdTaskValid(idTask: number): boolean {
+    return Tasks.some((task) => task.idTask === idTask)
+  }
+
   return {
+    Tasks,
     count,
     doubleCount,
     getTasksSortedByColumn,
@@ -295,13 +359,16 @@ export const useCounterStore = defineStore('counter', () => {
     getTask,
     getTasksByTag,
     addTask,
+    updateTask,
     deleteTask,
     updateTaskTag,
+    findTagById,
     updateTaskOrder,
     countTasks,
     findStateById,
     findStateByName,
     getTags,
-    getStates
+    getStates,
+    isIdTaskValid
   }
 })
