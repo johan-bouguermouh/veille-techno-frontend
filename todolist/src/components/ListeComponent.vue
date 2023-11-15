@@ -44,7 +44,7 @@ watch(props.columns, () => {
         <ul class="ulListTasks">
           <li v-for="task in column.tasks" :key="task.idTask">
             <h5 @click="openModal(column.columnId, task)">{{ task?.taskName }}</h5>
-            <div class="customState">
+            <div v-if="task?.tag" class="customState">
               <ticketTagComponent :tag="task?.tag"></ticketTagComponent>
             </div>
           </li>

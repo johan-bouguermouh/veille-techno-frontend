@@ -5,7 +5,7 @@ import { ref, onMounted, onBeforeUpdate } from 'vue'
 
 const ticketTagRef = ref(null)
 const props = defineProps<{
-  tag: TagInterface | undefined
+  tag: TagInterface
 }>()
 
 onMounted(() => {
@@ -23,12 +23,15 @@ onBeforeUpdate(() => {
       ? props.tag.tagColor + 33
       : 'transparent'
     ticketTagRef.value.style.color = props.tag.tagColor ? props.tag.tagColor : '#000000DE'
+  } else {
+    console.log('ticketTagRef.value is null')
+    console.log(ticketTagRef)
   }
 })
 </script>
 
 <template>
-  <div v-if="tag" class="ticketTag" ref="ticketTagRef">
+  <div class="ticketTag" ref="ticketTagRef">
     <span>{{ tag.tagName }}</span>
   </div>
 </template>

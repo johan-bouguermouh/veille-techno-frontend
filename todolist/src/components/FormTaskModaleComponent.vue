@@ -19,7 +19,7 @@ const {
   getTags,
   getStates,
   isIdTaskValid,
-  updateTask,
+  deleteTask,
   findTagById
 } = useCounterStore()
 
@@ -128,10 +128,30 @@ const updateSelect = ($event: any) => {
         </div>
         <div class="footer-modal-form-task">
           <button type="button" @click="handleIsOpen(false)">Annuler</button>
-          <button v-if="isIdTaskValid(thisTask.idTask)" @click="updateTask(thisTask)" type="button">
-            Modifier
+          <button
+            v-if="isIdTaskValid(thisTask.idTask)"
+            @click="
+              ($event) => {
+                deleteTask(thisTask.idTask)
+                handleIsOpen(false)
+              }
+            "
+            type="button"
+          >
+            Supprimer
           </button>
-          <button v-else type="button" @click="($event) => addTask(thisTask)">Ajouter</button>
+          <button
+            v-else
+            type="button"
+            @click="
+              ($event) => {
+                addTask(thisTask)
+                handleIsOpen(false)
+              }
+            "
+          >
+            Ajouter
+          </button>
         </div>
       </form>
     </div>
