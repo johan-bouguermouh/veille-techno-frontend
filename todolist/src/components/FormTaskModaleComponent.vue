@@ -127,8 +127,11 @@ const updateSelect = ($event: any) => {
           </fieldset>
         </div>
         <div class="footer-modal-form-task">
-          <button type="button" @click="handleIsOpen(false)">Annuler</button>
+          <button class="button-close" type="button" @click="handleIsOpen(false)">
+            <img alt="fermer la modale" src="../assets/iconSVG/close.svg" width="20" height="20" />
+          </button>
           <button
+            class="button-delete"
             v-if="isIdTaskValid(thisTask.idTask)"
             @click="
               ($event) => {
@@ -143,6 +146,7 @@ const updateSelect = ($event: any) => {
           <button
             v-else
             type="button"
+            class="button-submit"
             @click="
               ($event) => {
                 addTask(thisTask)
@@ -173,6 +177,7 @@ const updateSelect = ($event: any) => {
   backdrop-filter: blur(5px);
 }
 .wrappe-modal-form-task > div {
+  position: relative;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0px 3px 10px 0px #00000033;
@@ -199,6 +204,11 @@ const updateSelect = ($event: any) => {
   gap: 12px;
   height: 100%;
   box-sizing: border-box;
+}
+
+.button-delete {
+  background-color: #e63946;
+  color: #ffffff;
 }
 
 fieldset {
@@ -236,7 +246,7 @@ textarea {
   gap: 12px;
 }
 
-button {
+button:not(.button-close) {
   justify-self: flex-end;
   align-self: flex-end;
   padding: 4px 12px;
@@ -246,20 +256,37 @@ button {
   min-width: 90px;
   min-height: 44px;
 }
-button[type='submit'] {
+.button-close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: none;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  color: #000000ed;
+  padding: 4px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.button-submit {
   background-color: #640bad;
   color: #ffffff;
 }
-button:not([type='submit']) {
+.button-simple:not([type='submit']) {
   background-color: #a3a3a3;
   color: #000000ed;
   border: 1px solid #00000033;
   margin-right: 12px;
 }
 
-button:hover {
+button:not(.button-close):hover {
   filter: brightness(1.1);
   cursor: pointer;
   box-shadow: 0px 3px 10px 0px #00000033;
+}
+.button-close:hover img {
+  cursor: pointer;
+  transform: scale(1.1);
 }
 </style>
