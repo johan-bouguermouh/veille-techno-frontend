@@ -16,6 +16,12 @@ export interface TaskInterface {
   order: number
 }
 
+export interface ColumnTasksInterface {
+  columnName: string
+  columnId: number
+  tasks: Array<TaskInterface>
+}
+
 export const useTaskStore = defineStore(
   'Task',
   () => {
@@ -55,7 +61,7 @@ export const useTaskStore = defineStore(
      */
     function getTasksSortedByColumn() {
       // for each colomn get tasks sorted by order
-      const tasksSortedByColumn: any = []
+      const tasksSortedByColumn: ColumnTasksInterface[] = []
       States.forEach((state: StateInterface, index: number) => {
         tasksSortedByColumn.push({
           columnName: state.stateName,
