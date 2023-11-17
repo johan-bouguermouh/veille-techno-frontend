@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import ticketTagComponent from './ticketTagComponent.vue'
+import TicketTagComponent from './TicketTagComponent.vue'
 import FormTaskModaleComponent from './FormTaskModaleComponent.vue'
 import type { TaskInterface } from '@/stores/TaskStore'
 
-const props = defineProps<{
+defineProps<{
   todoMListName: string
   columns: any[]
 }>()
@@ -43,7 +43,7 @@ const handleIsOpen = (value: boolean) => {
           <li v-for="task in column.tasks" :key="task.idTask">
             <h5 @click="openModal(column.columnId, task)">{{ task?.taskName }}</h5>
             <div v-if="task?.tag" class="customState">
-              <ticketTagComponent :tag="task?.tag"></ticketTagComponent>
+              <TicketTagComponent :tag="task?.tag" />
             </div>
           </li>
           <li class="buttonAddTask" @click="($event) => openModal(column.columnId)">
