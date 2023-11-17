@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import Multiselect from 'vue-multiselect'
 
 const props = defineProps<{
   options: any[]
@@ -9,7 +8,7 @@ const props = defineProps<{
   propsNameLabelList: string
 }>()
 
-const multiselectRef = ref(null)
+const multiselectRef = ref<HTMLElement | null>(null)
 const listIsOpen = ref(false)
 const value = ref([])
 
@@ -17,14 +16,10 @@ const openList = () => {
   listIsOpen.value = !listIsOpen.value
 }
 
-const handleExitMultiselect = () => {
-  listIsOpen.value = false
-}
-
 watch(value, () => {
   props.handleValue(value.value)
 })
-const handleClickOutside = (event) => {
+const handleClickOutside = (event: any) => {
   if (event.target.alt === 'open list') {
     listIsOpen.value = true
   } else if (multiselectRef.value && !multiselectRef.value.contains(event.target)) {
