@@ -1,7 +1,7 @@
 //Component for modal form to add new task or edit existing task
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import { useCounterStore, type TaskInterface } from '@/stores/counter'
+import { useTaskStore, type TaskInterface } from '@/stores/TaskStore.js'
 import { ref, onMounted } from 'vue'
 import { computed } from 'vue'
 
@@ -21,7 +21,7 @@ const {
   isIdTaskValid,
   deleteTask,
   findTagById
-} = useCounterStore()
+} = useTaskStore()
 
 //console.log(props.selectedTask)
 const thisTask = ref<TaskInterface>({

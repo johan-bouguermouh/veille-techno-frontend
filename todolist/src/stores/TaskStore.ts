@@ -22,8 +22,8 @@ export interface TaskInterface {
   order: number
 }
 
-export const useCounterStore = defineStore(
-  'counter',
+export const useTaskStore = defineStore(
+  'Task',
   () => {
     const States = ref<Array<StateInteface>>([
       {

@@ -3,10 +3,10 @@
 import ListeComponent from '@/components/ListeComponent.vue'
 import MultiSelectComponent from '@/components/multiSelectComponent.vue'
 /** @define store de tasks de la todoliste */
-import { useCounterStore, type TagInterface, type TaskInterface } from '@/stores/counter'
+import { useTaskStore, type TagInterface, type TaskInterface } from '@/stores/TaskStore.js'
 import { ref, watch, onMounted } from 'vue'
 
-const { getTasksSortedByColumn, Tasks, getTags } = useCounterStore()
+const { getTasksSortedByColumn, Tasks, getTags } = useTaskStore()
 const columns = ref([])
 const filterTagControl = ref<TagInterface[] | null[]>([])
 
