@@ -1,29 +1,60 @@
 <script setup lang="ts">
 //import TheWelcome from '../components/TheWelcome.vue'
 import ListeComponent from '@/components/ListeComponent.vue'
+import MultiSelectComponent from '@/components/multiSelectComponent.vue'
 /** @define store de tasks de la todoliste */
-import { useCounterStore } from '@/stores/counter'
+import { useCounterStore, type TagInterface, type TaskInterface } from '@/stores/counter'
 import { ref, watch, onMounted } from 'vue'
 
-const { getTasksSortedByColumn, Tasks } = useCounterStore()
-//console.log(getTasksSortedByColumn())
+const { getTasksSortedByColumn, Tasks, getTags } = useCounterStore()
 const columns = ref([])
+const filterTagControl = ref<TagInterface[] | null[]>([])
 
-//console/log task on changement de task
 onMounted(() => {
-  //console.log('Mounted IN HOME VIEW')
   columns.value = getTasksSortedByColumn()
 })
 
-// si Task change on force le refrech de la vue
-watch(Tasks, () => {
-  console.log('watch IN HOME VIEW =>', Tasks)
+watch([Tasks, filterTagControl], () => {
+  console.log(Tasks)
+  if (filterTagControl.value.length > 0) {
+    columns.value = getTasksSortedByColumn().map((column: any) => {
+      return {
+        ...column,
+        tasks: column.tasks.filter((task: TaskInterface) => {
+          return filterTagControl.value.some((tag: TagInterface | any) => {
+            return tag.idTag === task.tag?.idTag
+          })
+        })
+      }
+    })
+    return
+  }
   columns.value = getTasksSortedByColumn()
 })
+
+/** @define Handler qui met à jour le filtre de tag filterTagControl
+ * @param value TagInterface[] | null
+ * @depends filterTagControl
+ * @returns void
+ */
+const controlerFilterTag = (value: TagInterface[] | null) => {
+  if (value !== null) {
+    filterTagControl.value = value
+    return
+  }
+}
 </script>
 
 <template>
   <main>
+    <div class="customState">
+      <MultiSelectComponent
+        :options="getTags()"
+        label="Filtrer par Tags"
+        :handleValue="controlerFilterTag"
+        propsNameLabelList="tagName"
+      />
+    </div>
     <ListeComponent todoMListName="Ma todo liste" :columns="columns"></ListeComponent>
   </main>
 </template>
@@ -33,5 +64,8 @@ main {
   width: 100%;
   height: calc(100vh - 90px);
   padding: 36px;
+}
+.customState {
+  width: 200px;
 }
 </style>

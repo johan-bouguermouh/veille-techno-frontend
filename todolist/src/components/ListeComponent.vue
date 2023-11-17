@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import ticketTagComponent from './ticketTagComponent.vue'
 import FormTaskModaleComponent from './FormTaskModaleComponent.vue'
 import type { TaskInterface } from '@/stores/counter'
+
 const props = defineProps<{
   todoMListName: string
   columns: any[]
 }>()
-/** On verifie si les props sont bien passées une fois ressue par le store */
-//console.log(props.columns)
+
 /** @define open dialogue compoent to add or edit task */
 const isModalOpen = ref(false)
 const selectedTask = ref({} as TaskInterface | undefined)
@@ -29,15 +29,13 @@ const openModal = (idColumn: number, task?: any) => {
 const handleIsOpen = (value: boolean) => {
   isModalOpen.value = value
 }
-
-watch(props.columns, () => {
-  console.log('Updated IN LISTE COMPONENT')
-})
 </script>
 
 <template>
   <div class="greetings">
-    <h1 class="green">{{ todoMListName }}</h1>
+    <header>
+      <h1 class="title-list">{{ todoMListName }}</h1>
+    </header>
     <div class="wrapper-column">
       <div v-for="column in columns" :key="column.columnId">
         <h3>{{ column?.columnName }}</h3>
@@ -89,6 +87,15 @@ h3 {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+.greetings > header {
+  padding: 12px;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .greetings h1,

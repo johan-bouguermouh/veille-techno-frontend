@@ -50,7 +50,9 @@ const title = computed(() => {
 const closeModale = ($event: any) => {
   if ($event.composedPath()[0].className === 'wrappe-modal-form-task') {
     props.handleIsOpen(false)
+    return
   }
+  $event.stopPropagation()
 }
 
 onMounted(() => {
