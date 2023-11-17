@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import Multiselect from 'vue-multiselect'
 
 const props = defineProps<{
@@ -9,6 +9,7 @@ const props = defineProps<{
   propsNameLabelList: string
 }>()
 
+const multiselectRef = ref(null)
 const listIsOpen = ref(false)
 const value = ref([])
 
@@ -16,21 +17,41 @@ const openList = () => {
   listIsOpen.value = !listIsOpen.value
 }
 
+const handleExitMultiselect = () => {
+  listIsOpen.value = false
+}
+
 watch(value, () => {
   props.handleValue(value.value)
+})
+const handleClickOutside = (event) => {
+  if (event.target.alt === 'open list') {
+    listIsOpen.value = true
+  } else if (multiselectRef.value && !multiselectRef.value.contains(event.target)) {
+    console.log(event.target)
+    listIsOpen.value = false
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('click', handleClickOutside)
 })
 </script>
 
 <template>
-  <div class="wrapper-multiselect" @focusout="($event) => (listIsOpen = false)">
+  <div class="wrapper-multiselect" ref="multiselectRef">
     <label class="typo__label">{{ label }}</label>
     <div class="input-multiselect">
-      <div class=".inputn-mutliselect-fields">
+      <label for="open-close-list" class="inputn-mutliselect-fields">
         <span vIf="value.length" v-for="item in value" :key="item[propsNameLabelList]">
           {{ item[propsNameLabelList] }},
         </span>
-      </div>
-      <button class="open-list" type="button" @click="openList">
+      </label>
+      <button id="open-close-list" class="open-list" type="button" @click="openList">
         <img
           v-if="!listIsOpen"
           src="@/assets/iconSVG/chevron-down.svg"
@@ -51,7 +72,7 @@ watch(value, () => {
       <ul>
         <li v-for="option in options" :key="option.name">
           <label>
-            <input type="checkbox" :value="option" v-model="value" />
+            <input type="checkbox" class="MultiSelected-checkbox" :value="option" v-model="value" />
             {{ option[propsNameLabelList] }}
           </label>
         </li>
@@ -91,6 +112,11 @@ watch(value, () => {
 }
 .inputn-mutliselect-fields {
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  overflow-x: hidden;
 }
 
 .inputn-mutliselect-fields span {

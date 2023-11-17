@@ -15,7 +15,6 @@ onMounted(() => {
 })
 
 watch([Tasks, filterTagControl], () => {
-  console.log(Tasks)
   if (filterTagControl.value.length > 0) {
     columns.value = getTasksSortedByColumn().map((column: any) => {
       return {
