@@ -1,5 +1,4 @@
 import './assets/main.css'
-import Multiselect from 'vue-multiselect'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { createPersistedState } from 'pinia-plugin-persistedstate'
@@ -15,4 +14,3 @@ app.use(pinia)
 app.use(router)
 
 app.mount('#app')
-app.component('multiselect', Multiselect)
