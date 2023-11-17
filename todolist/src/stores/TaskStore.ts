@@ -11,7 +11,7 @@ export interface TaskInterface {
   taskName: string
   description: string
   taskIsDone: boolean
-  state: StateInteface
+  state: StateInterface
   tag?: TagInterface | undefined
   order: number
 }
