@@ -17,13 +17,12 @@ const openList = () => {
 }
 
 watch(value, () => {
-  //console.log(value.value)
   props.handleValue(value.value)
 })
 </script>
 
 <template>
-  <div class="wrapper-multiselect" @blur="($event) => (listIsOpen = false)">
+  <div class="wrapper-multiselect" @focusout="($event) => (listIsOpen = false)">
     <label class="typo__label">{{ label }}</label>
     <div class="input-multiselect">
       <div class=".inputn-mutliselect-fields">
@@ -33,7 +32,7 @@ watch(value, () => {
       </div>
       <button class="open-list" type="button" @click="openList">
         <img
-          v-if="listIsOpen"
+          v-if="!listIsOpen"
           src="@/assets/iconSVG/chevron-down.svg"
           width="16"
           height="16"
@@ -48,7 +47,7 @@ watch(value, () => {
         />
       </button>
     </div>
-    <div v-if="!listIsOpen" class="wrapper-list">
+    <div v-if="listIsOpen" class="wrapper-list">
       <ul>
         <li v-for="option in options" :key="option.name">
           <label>
