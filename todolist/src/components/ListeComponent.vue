@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import ticketTagComponent from './ticketTagComponent.vue'
 import FormTaskModaleComponent from './FormTaskModaleComponent.vue'
-import type { TaskInterface } from '@/stores/counter'
+import type { TaskInterface } from '@/stores/TaskStore'
 
 const props = defineProps<{
   todoMListName: string

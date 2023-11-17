@@ -1,12 +1,13 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { useTagStore, type TagInterface } from './TagStore'
 
-export interface TagInterface {
-  tagName: string
-  idTag: number
-  tagColor?: string
+const { Tags } = useTagStore()
+
+export interface StateInterface {
+  idState: number
+  stateName: string
 }
-
 export interface StateInteface {
   idState: number
   stateName: string
@@ -39,30 +40,13 @@ export const useTaskStore = defineStore(
         stateName: 'Terminé'
       }
     ])
-    const Tags = ref<Array<TagInterface>>([
-      {
-        idTag: 1,
-        tagName: 'mineur',
-        tagColor: '#fb5607'
-      },
-      {
-        idTag: 2,
-        tagName: 'moyen',
-        tagColor: '#ff006e'
-      },
-      {
-        idTag: 3,
-        tagName: 'haut',
-        tagColor: '#8338ec'
-      }
-    ])
     const Tasks = ref<Array<TaskInterface>>([
       {
         taskName: "Tâche d'exemple en court",
         idTask: 1,
         description: 'Ceci est une description',
         taskIsDone: false,
-        tag: Tags.value[0],
+        tag: Tags[0],
         order: 1,
         state: States.value[1]
       },
@@ -71,7 +55,7 @@ export const useTaskStore = defineStore(
         idTask: 2,
         description: 'Ceci est une description',
         taskIsDone: true,
-        tag: Tags.value[1],
+        tag: Tags[1],
         order: 2,
         state: States.value[2]
       },
@@ -80,7 +64,7 @@ export const useTaskStore = defineStore(
         idTask: 3,
         description: 'Ceci est une description',
         taskIsDone: false,
-        tag: Tags.value[2],
+        tag: Tags[2],
         order: 3,
         state: States.value[0]
       }
@@ -114,7 +98,6 @@ export const useTaskStore = defineStore(
      * // return Tasks
      */
     function getTasks(): Array<TaskInterface> {
-      // return Tasks
       return Tasks.value.sort((a, b) => a.order - b.order)
     }
 
@@ -155,7 +138,6 @@ export const useTaskStore = defineStore(
      * tag: Tags[2],
      */
     function addTask(task: TaskInterface): void {
-      console.log('task on store =>', task)
       Tasks.value.push(task)
     }
 
@@ -205,7 +187,7 @@ export const useTaskStore = defineStore(
      */
     function updateTaskTag(idTask: number, idTag: number): void {
       const index = Tasks.value.findIndex((task) => task.idTask === idTask)
-      Tasks.value[index].tag = Tags.value.find((tag) => tag.idTag === idTag)
+      Tasks.value[index].tag = Tags.find((tag) => tag.idTag === idTag)
     }
 
     /**
@@ -277,41 +259,6 @@ export const useTaskStore = defineStore(
     }
 
     /**
-     * @define Récupérer tout les tags existants
-     * @returns {Array<TagInterface>}
-     * @memberof useCounterStore
-     * @example
-     * getTags()
-     * // return Tags
-     */
-    function getTags(): Array<TagInterface> {
-      return Tags.value
-    }
-
-    /**
-     * @define Récupère un tag par son id
-     * @param {number} idTag
-     * @returns {TagInterface}
-     * @memberof useCounterStore
-     * @example
-     * findTagById(1)
-     * // return Tags[0]
-     */
-    function findTagById(idTag: number | string): TagInterface {
-      //si c'est une string on la parse en number
-      if (typeof idTag === 'string') {
-        idTag = parseInt(idTag)
-      }
-      const tagsFinded = Tags.value.find((tag) => tag.idTag == idTag)
-      console.log('tagsFinded =>', tagsFinded)
-      if (tagsFinded) {
-        return tagsFinded
-      } else {
-        return Tags.value[0]
-      }
-    }
-
-    /**
      * @define Récupérer tout les states existants
      * @returns {Array<StateInteface>}
      * @memberof useCounterStore
@@ -346,12 +293,10 @@ export const useTaskStore = defineStore(
       updateTask,
       deleteTask,
       updateTaskTag,
-      findTagById,
       updateTaskOrder,
       countTasks,
       findStateById,
       findStateByName,
-      getTags,
       getStates,
       isIdTaskValid
     }

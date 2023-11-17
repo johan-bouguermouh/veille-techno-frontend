@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TagInterface } from '@/stores/counter'
+import type { TagInterface } from '@/stores/TagStore'
 import { defineProps } from 'vue'
 import { ref, onMounted, onBeforeUpdate } from 'vue'
 

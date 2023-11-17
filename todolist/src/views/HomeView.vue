@@ -2,11 +2,14 @@
 //import TheWelcome from '../components/TheWelcome.vue'
 import ListeComponent from '@/components/ListeComponent.vue'
 import MultiSelectComponent from '@/components/multiSelectComponent.vue'
+import type { TagInterface } from '@/stores/TagStore'
+import { useTagStore } from '@/stores/TagStore'
 /** @define store de tasks de la todoliste */
-import { useTaskStore, type TagInterface, type TaskInterface } from '@/stores/TaskStore.js'
+import { useTaskStore, type TaskInterface } from '@/stores/TaskStore.js'
 import { ref, watch, onMounted } from 'vue'
 
-const { getTasksSortedByColumn, Tasks, getTags } = useTaskStore()
+const { getTasksSortedByColumn, Tasks } = useTaskStore()
+const { getTags } = useTagStore()
 const columns = ref([])
 const filterTagControl = ref<TagInterface[] | null[]>([])
 
