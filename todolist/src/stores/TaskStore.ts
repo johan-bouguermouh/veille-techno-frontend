@@ -1,17 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useTagStore, type TagInterface } from './TagStore'
+import { useStateStore, type StateInterface } from './StateStore'
 
 const { Tags } = useTagStore()
-
-export interface StateInterface {
-  idState: number
-  stateName: string
-}
-export interface StateInteface {
-  idState: number
-  stateName: string
-}
+const { States } = useStateStore()
 
 export interface TaskInterface {
   idTask: number
@@ -26,20 +19,6 @@ export interface TaskInterface {
 export const useTaskStore = defineStore(
   'Task',
   () => {
-    const States = ref<Array<StateInteface>>([
-      {
-        idState: 1,
-        stateName: 'A faire'
-      },
-      {
-        idState: 2,
-        stateName: 'En cours'
-      },
-      {
-        idState: 3,
-        stateName: 'Terminé'
-      }
-    ])
     const Tasks = ref<Array<TaskInterface>>([
       {
         taskName: "Tâche d'exemple en court",
@@ -48,7 +27,7 @@ export const useTaskStore = defineStore(
         taskIsDone: false,
         tag: Tags[0],
         order: 1,
-        state: States.value[1]
+        state: States[1]
       },
       {
         taskName: 'Tâche terminée',
@@ -57,7 +36,7 @@ export const useTaskStore = defineStore(
         taskIsDone: true,
         tag: Tags[1],
         order: 2,
-        state: States.value[2]
+        state: States[2]
       },
       {
         taskName: 'Tâche custom',
@@ -66,7 +45,7 @@ export const useTaskStore = defineStore(
         taskIsDone: false,
         tag: Tags[2],
         order: 3,
-        state: States.value[0]
+        state: States[0]
       }
     ])
 
@@ -77,7 +56,7 @@ export const useTaskStore = defineStore(
     function getTasksSortedByColumn() {
       // for each colomn get tasks sorted by order
       const tasksSortedByColumn: any = []
-      States.value.forEach((state, index) => {
+      States.forEach((state: StateInterface, index: number) => {
         tasksSortedByColumn.push({
           columnName: state.stateName,
           columnId: index + 1,
@@ -204,49 +183,6 @@ export const useTaskStore = defineStore(
     }
 
     /**
-     * @define Récupère un state par son id
-     * @param {number} idState
-     * @returns {StateInteface}
-     */
-    function findStateById(idState: number | string): StateInteface {
-      if (idState) {
-        if (typeof idState === 'string') {
-          idState = parseInt(idState)
-        }
-        const stateFinded = States.value.find((state) => state.idState === idState)
-        if (stateFinded) {
-          return stateFinded
-        } else {
-          return States.value[2]
-        }
-      } else {
-        return States.value[2]
-      }
-    }
-
-    /**
-     * @define Trouver un state par son nom
-     * @param {string} stateName
-     * @returns {StateInteface}
-     * @memberof useCounterStore
-     * @example
-     * findStateByName('A faire')
-     * // return States[0]
-     */
-    function findStateByName(stateName: string): StateInteface {
-      if (stateName) {
-        const stateFinded = States.value.find((state) => state.stateName === stateName)
-        if (stateFinded) {
-          return stateFinded
-        } else {
-          return States.value[0]
-        }
-      } else {
-        return States.value[0]
-      }
-    }
-
-    /**
      * @description Compte le nombre de tâches
      * @returns {number}
      * @memberof useCounterStore
@@ -256,18 +192,6 @@ export const useTaskStore = defineStore(
      */
     function countTasks(): number {
       return Tasks.value.length
-    }
-
-    /**
-     * @define Récupérer tout les states existants
-     * @returns {Array<StateInteface>}
-     * @memberof useCounterStore
-     * @example
-     * getStates()
-     * // return States
-     */
-    function getStates(): Array<StateInteface> {
-      return States.value
     }
 
     /**
@@ -295,9 +219,6 @@ export const useTaskStore = defineStore(
       updateTaskTag,
       updateTaskOrder,
       countTasks,
-      findStateById,
-      findStateByName,
-      getStates,
       isIdTaskValid
     }
   },

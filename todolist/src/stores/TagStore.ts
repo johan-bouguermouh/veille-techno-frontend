@@ -55,7 +55,6 @@ export const useTagStore = defineStore(
         idTag = parseInt(idTag)
       }
       const tagsFinded = Tags.value.find((tag) => tag.idTag == idTag)
-      console.log('tagsFinded =>', tagsFinded)
       if (tagsFinded) {
         return tagsFinded
       } else {

@@ -5,6 +5,7 @@ import { useTaskStore, type TaskInterface } from '@/stores/TaskStore.js'
 import { ref, onMounted } from 'vue'
 import { computed } from 'vue'
 import { useTagStore } from '@/stores/TagStore'
+import { useStateStore } from '@/stores/StateStore'
 
 const props = defineProps<{
   isOpen: boolean
@@ -13,7 +14,8 @@ const props = defineProps<{
   handleIsOpen: (value: boolean) => void
 }>()
 
-const { addTask, countTasks, findStateById, getStates, isIdTaskValid, deleteTask } = useTaskStore()
+const { addTask, countTasks, isIdTaskValid, deleteTask } = useTaskStore()
+const { findStateById, getStates } = useStateStore()
 const { getTags, findTagById } = useTagStore()
 
 //console.log(props.selectedTask)
