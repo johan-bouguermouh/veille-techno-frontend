@@ -3,9 +3,6 @@ import { defineStore } from 'pinia'
 import { useTagStore, type TagInterface } from './TagStore'
 import { useStateStore, type StateInterface } from './StateStore'
 
-const { Tags } = useTagStore()
-const { States } = useStateStore()
-
 export interface TaskInterface {
   idTask: number
   taskName: string
@@ -25,6 +22,12 @@ export interface ColumnTasksInterface {
 export const useTaskStore = defineStore(
   'Task',
   () => {
+    const TagsStore = useTagStore()
+    const StatesStore = useStateStore()
+
+    const Tags = TagsStore.Tags
+    const States = StatesStore.States
+
     const Tasks = ref<Array<TaskInterface>>([
       {
         taskName: "Tâche d'exemple en court",
