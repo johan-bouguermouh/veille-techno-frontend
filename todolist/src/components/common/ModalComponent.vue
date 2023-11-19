@@ -2,7 +2,10 @@
 import { defineProps, type Ref, type UnwrapRef } from 'vue'
 import { onMounted, ref, watch } from 'vue'
 
+/** Défini précisément les options de fermeture de la modale */
 type ModalCloseOption = 'outside' | 'footer' | 'exit'
+
+/** Défini les références des éléments de la modale */
 type Refs = {
   headerRef: Ref<UnwrapRef<HTMLElement | null>> | null
   mainRef: Ref<UnwrapRef<HTMLElement | null>> | null

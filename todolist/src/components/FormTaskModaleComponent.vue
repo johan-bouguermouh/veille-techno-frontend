@@ -4,8 +4,9 @@ import { defineProps } from 'vue'
 import { useTaskStore, type TaskInterface } from '@/stores/TaskStore.js'
 import { ref, onMounted } from 'vue'
 import { computed } from 'vue'
-import { useTagStore } from '@/stores/TagStore'
-import { useStateStore } from '@/stores/StateStore'
+import { type TagInterface, useTagStore } from '@/stores/TagStore'
+import { type StateInterface, useStateStore } from '@/stores/StateStore'
+import ModalComponent from './common/ModalComponent.vue'
 
 const props = defineProps<{
   isOpen: boolean
@@ -18,7 +19,7 @@ const { addTask, countTasks, isIdTaskValid, deleteTask } = useTaskStore()
 const { findStateById, getStates } = useStateStore()
 const { getTags, findTagById } = useTagStore()
 
-//console.log(props.selectedTask)
+/** Référence de la tâche mise à jour par les formulaire */
 const thisTask = ref<TaskInterface>({
   idTask: 0,
   taskName: '',
@@ -36,20 +37,16 @@ const thisTask = ref<TaskInterface>({
   }
 })
 
-const tags = ref(getTags())
-const states = ref(getStates())
+const tags = ref<TagInterface[]>(getTags())
+const states = ref<StateInterface[]>(getStates())
 const title = computed(() => {
   return props.selectedTask ? 'Modifier la tâche' : 'Ajouter une tâche'
 })
 
-const closeModale = ($event: any) => {
-  if ($event.composedPath()[0].className === 'wrappe-modal-form-task') {
-    props.handleIsOpen(false)
-    return
-  }
-  $event.stopPropagation()
-}
-
+/** Facilite la mise à jours de la référance thisTask
+ * @param $event
+ * @returns void
+ */
 onMounted(() => {
   thisTask.value = props.selectedTask
     ? props.selectedTask
@@ -63,6 +60,10 @@ onMounted(() => {
       }
 })
 
+/** Permet de mettre à jour la référence thisTask selon l'input
+ * @param $event
+ * @returns void
+ */
 const updateSelect = ($event: any) => {
   switch ($event.target.name) {
     case 'state':
@@ -78,12 +79,15 @@ const updateSelect = ($event: any) => {
   }
 }
 </script>
-// @submit.prevent="addTask(thisTask)"
+
 <template>
-  <div v-if="isOpen" class="wrappe-modal-form-task" @click="closeModale($event)">
-    <div class="main-modal-form-task">
-      <h1>{{ title }}</h1>
-      <hr />
+  <ModalComponent
+    :isOpen="isOpen"
+    :handleIsOpen="handleIsOpen"
+    :title="title"
+    :closeModaleProps="['outside', 'exit']"
+  >
+    <template #default>
       <form class="form-task">
         <div>
           <fieldset>
@@ -123,70 +127,42 @@ const updateSelect = ($event: any) => {
             </select>
           </fieldset>
         </div>
-        <div class="footer-modal-form-task">
-          <button class="button-close" type="button" @click="handleIsOpen(false)">
-            <img alt="fermer la modale" src="../assets/iconSVG/close.svg" width="20" height="20" />
-          </button>
-          <button
-            class="button-delete"
-            v-if="isIdTaskValid(thisTask.idTask)"
-            @click="
-              ($event) => {
-                deleteTask(thisTask.idTask)
-                handleIsOpen(false)
-              }
-            "
-            type="button"
-          >
-            Supprimer
-          </button>
-          <button
-            v-else
-            type="button"
-            class="button-submit"
-            @click="
-              ($event) => {
-                addTask(thisTask)
-                handleIsOpen(false)
-              }
-            "
-          >
-            Ajouter
-          </button>
-        </div>
       </form>
-    </div>
-  </div>
+    </template>
+    <template #footer>
+      <div class="footer-modal-form-task">
+        <button
+          class="button-delete"
+          v-if="isIdTaskValid(thisTask.idTask)"
+          @click="
+            ($event) => {
+              deleteTask(thisTask.idTask)
+              handleIsOpen(false)
+            }
+          "
+          type="button"
+        >
+          Supprimer
+        </button>
+        <button
+          v-else
+          type="button"
+          class="button-submit"
+          @click="
+            ($event) => {
+              addTask(thisTask)
+              handleIsOpen(false)
+            }
+          "
+        >
+          Ajouter
+        </button>
+      </div>
+    </template>
+  </ModalComponent>
 </template>
 
 <style scoped>
-.wrappe-modal-form-task {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: #00000066;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  backdrop-filter: blur(5px);
-}
-.wrappe-modal-form-task > div {
-  position: relative;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0px 3px 10px 0px #00000033;
-  padding: 12px;
-  height: 50vh;
-  width: 50vw;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
 .form-task {
   display: flex;
   flex-direction: column;
