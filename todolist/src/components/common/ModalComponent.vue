@@ -45,11 +45,11 @@ const props = defineProps<{
   useRef?: (collection: Refs) => void
 }>()
 
-/** HTMLElement du header de la modale */
+/** Ref de HTMLElement du header de la modale */
 const headerModal = ref<HTMLElement | null>(null)
-/** HTMLElement du main la modale */
+/** Ref de HTMLElement du main la modale */
 const mainModal = ref<HTMLElement | null>(null)
-/** HTMLElement du footer de la modale */
+/** Ref de HTMLElement du footer de la modale */
 const footerModal = ref<HTMLElement | null>(null)
 
 /**
