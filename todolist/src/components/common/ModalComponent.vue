@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { UnwrapRefSimple } from '@vue/reactivity'
 import { defineProps, type Ref, type UnwrapRef } from 'vue'
 import { onMounted, ref, watch } from 'vue'
 
