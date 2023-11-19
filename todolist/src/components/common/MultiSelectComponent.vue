@@ -19,6 +19,7 @@ const openList = () => {
 watch(value, () => {
   props.handleValue(value.value)
 })
+
 const handleClickOutside = (event: any) => {
   if (event.target.alt === 'open list') {
     listIsOpen.value = true

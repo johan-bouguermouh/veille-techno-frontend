@@ -1,15 +1,10 @@
 <script setup lang="ts">
-//import TheWelcome from '../components/TheWelcome.vue'
 import ListeComponent from '@/components/ListeComponent.vue'
-import MultiSelectComponent from '@/components/multiSelectComponent.vue'
 import type { TagInterface } from '@/stores/TagStore'
-import { useTagStore } from '@/stores/TagStore'
-/** @define store de tasks de la todoliste */
 import { useTaskStore, type TaskInterface, type ColumnTasksInterface } from '@/stores/TaskStore.js'
 import { ref, watch, onMounted } from 'vue'
 
 const { getTasksSortedByColumn, Tasks } = useTaskStore()
-const { getTags } = useTagStore()
 const columns = ref<ColumnTasksInterface[]>([])
 const filterTagControl = ref<TagInterface[] | null[]>([])
 
@@ -49,15 +44,19 @@ const controlerFilterTag = (value: TagInterface[] | null) => {
 
 <template>
   <main>
-    <div class="customState">
+    <!-- <div class="customState">
       <MultiSelectComponent
         :options="getTags()"
         label="Filtrer par Tags"
         :handleValue="controlerFilterTag"
         propsNameLabelList="tagName"
       />
-    </div>
-    <ListeComponent todoMListName="Ma todo liste" :columns="columns"></ListeComponent>
+    </div> -->
+    <ListeComponent
+      todoMListName="Ma todo liste"
+      :columns="columns"
+      :handleControlerFilterTag="controlerFilterTag"
+    ></ListeComponent>
   </main>
 </template>
 

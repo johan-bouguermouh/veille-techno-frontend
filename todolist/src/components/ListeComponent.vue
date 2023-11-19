@@ -2,16 +2,35 @@
 import { ref } from 'vue'
 import TicketTagComponent from './TicketTagComponent.vue'
 import FormTaskModaleComponent from './FormTaskModaleComponent.vue'
-import type { TaskInterface } from '@/stores/TaskStore'
+import type { ColumnTasksInterface, TaskInterface } from '@/stores/TaskStore'
+import { useTagStore, type TagInterface } from '@/stores/TagStore'
+
+const { getTags } = useTagStore()
 
 defineProps<{
+  /** @define Nom de la liste
+   * @type string
+   * @required
+   */
   todoMListName: string
-  columns: any[]
+  /** @define Liste des colonnes
+   * @type ColumnTasksInterface[]
+   * @required
+   */
+  columns: ColumnTasksInterface[]
+  /** @define Handler qui met à jour le filtre de tag filterTagControl
+   * @param value TagInterface[] | null
+   * @depends filterTagControl
+   * @returns void
+   */
+  handleControlerFilterTag: (value: TagInterface[] | null) => void
 }>()
 
-/** @define open dialogue compoent to add or edit task */
+/** Définie l'état d'ouverture de la modale */
 const isModalOpen = ref(false)
+/** Définie la tâche sélectionnée lors de l'ouverture de la modale */
 const selectedTask = ref({} as TaskInterface | undefined)
+/** Définie l'id de la colonne sélectionnée lors de l'ouverture de la modale */
 const idStateSelected = ref(1)
 
 /** @define Met à jour les valeus d'hydratation de la modale forumlaire
@@ -25,7 +44,7 @@ const openModal = (idColumn: number, task?: any) => {
   idStateSelected.value = idColumn
 }
 
-/** @define handler pour set la modal à false */
+/** handler pour set la modal à false */
 const handleIsOpen = (value: boolean) => {
   isModalOpen.value = value
 }
@@ -35,6 +54,12 @@ const handleIsOpen = (value: boolean) => {
   <div class="greetings">
     <header>
       <h1 class="title-list">{{ todoMListName }}</h1>
+      <multiSelectComponent
+        :options="getTags()"
+        label="Filtrer par Tags"
+        :handleValue="handleControlerFilterTag"
+        propsNameLabelList="tagName"
+      />
     </header>
     <div class="wrapper-column">
       <div v-for="column in columns" :key="column.columnId">
