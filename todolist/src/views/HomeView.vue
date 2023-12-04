@@ -44,14 +44,6 @@ const controlerFilterTag = (value: TagInterface[] | null) => {
 
 <template>
   <main>
-    <!-- <div class="customState">
-      <MultiSelectComponent
-        :options="getTags()"
-        label="Filtrer par Tags"
-        :handleValue="controlerFilterTag"
-        propsNameLabelList="tagName"
-      />
-    </div> -->
     <ListeComponent
       todoMListName="Ma todo liste"
       :columns="columns"
@@ -65,8 +57,5 @@ main {
   width: 100%;
   height: calc(100vh - 90px);
   padding: 36px;
-}
-.customState {
-  width: 200px;
 }
 </style>

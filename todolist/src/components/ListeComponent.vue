@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import TicketTagComponent from './TicketTagComponent.vue'
 import FormTaskModaleComponent from './FormTaskModaleComponent.vue'
+import MultiSelectComponent from './common/MultiSelectComponent.vue'
 import type { ColumnTasksInterface, TaskInterface } from '@/stores/TaskStore'
 import { useTagStore, type TagInterface } from '@/stores/TagStore'
 
@@ -38,7 +39,6 @@ const idStateSelected = ref(1)
  * @returns void
  */
 const openModal = (idColumn: number, task?: any) => {
-  //console.log(task.idTask)
   isModalOpen.value = true
   selectedTask.value = task ? task : undefined
   idStateSelected.value = idColumn
@@ -54,12 +54,14 @@ const handleIsOpen = (value: boolean) => {
   <div class="greetings">
     <header>
       <h1 class="title-list">{{ todoMListName }}</h1>
-      <multiSelectComponent
-        :options="getTags()"
-        label="Filtrer par Tags"
-        :handleValue="handleControlerFilterTag"
-        propsNameLabelList="tagName"
-      />
+      <div class="customState">
+        <MultiSelectComponent
+          :options="getTags()"
+          label="Filtrer par Tags"
+          :handleValue="handleControlerFilterTag"
+          propsNameLabelList="tagName"
+        />
+      </div>
     </header>
     <div class="wrapper-column">
       <div v-for="column in columns" :key="column.columnId">
@@ -198,6 +200,10 @@ h3 {
 .customState {
   display: flex;
   gap: 12px;
+}
+
+.customState {
+  width: 200px;
 }
 
 @media (min-width: 1024px) {
